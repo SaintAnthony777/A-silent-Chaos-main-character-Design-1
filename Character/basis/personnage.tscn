@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cmha6asbftnea"]
+
+[ext_resource type="PackedScene" uid="uid://vm5355y0d8ls" path="res://Character/basis/character mesh.tscn" id="1_pcxnp"]
+[ext_resource type="Script" uid="uid://bobq2pwf56tdv" path="res://Character/basis/personnage.gd" id="1_w4kjk"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4jp36"]
+radius = 0.407628
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_a0w0b"]
+
+[node name="Personnage" type="CharacterBody3D"]
+script = ExtResource("1_w4kjk")
+
+[node name="Rogue" parent="." instance=ExtResource("1_pcxnp")]
+unique_name_in_owner = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.970379, -0.0675025)
+shape = SubResource("CapsuleShape3D_4jp36")
+
+[node name="Camera_pivot" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.938746, -0.34461, 0, 0.34461, 0.938746, 0, 1.54788, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Camera_pivot"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.00771475, -0.00365937, -0.00996846)
+shape = SubResource("SphereShape3D_a0w0b")
+spring_length = 8.0
+
+[node name="Camera3D" type="Camera3D" parent="Camera_pivot/SpringArm3D"]
+unique_name_in_owner = true
