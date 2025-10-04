@@ -28,10 +28,8 @@ func _input(_event: InputEvent) -> void:
 		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 	if Input.is_action_just_pressed("left click"):
 		pass
-	if Input.is_action_just_pressed("Jump") and is_on_floor():
-		start_jumping=true
 	if Input.is_action_just_pressed("dashes") and CanDash:
-		dashlogic(0.7,1.0)
+		dashlogic(.7,.5)
 func _unhandled_input(event: InputEvent) -> void:
 	var camera_is_in_motion:=(
 		event is InputEventMouseMotion and 
@@ -57,11 +55,11 @@ func _physics_process(delta: float) -> void:
 	var forward:=camera.global_basis.z
 	var right:=camera.global_basis.x
 	var move_direction:=forward*input_dir.y*-1 + right*input_dir.x*-1
+	var direction := (camera_controller.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	move_direction.y = 0.0
 	move_direction=move_direction.normalized()
 	
-	var direction := (camera_controller.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if Isdashing:
 		var dashdirection=character_mesh.transform.basis.z.normalized()
 		velocity=dashdirection*dashspeed
@@ -73,8 +71,9 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
-			
-	if move_direction.length() > 0.2:
+	
+	###rotation du personnage
+	if move_direction.length() > 0.2 and !Isdashing:
 		last_movement_direction=move_direction
 	var target_angle:=Vector3.BACK.signed_angle_to(last_movement_direction,Vector3.UP)
 	character_mesh.global_rotation.y=lerp_angle(character_mesh.rotation.y,target_angle,rotation_speed*delta)
