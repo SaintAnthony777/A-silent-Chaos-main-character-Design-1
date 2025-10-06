@@ -6,7 +6,7 @@ extends CharacterBody3D
 @export var JUMP_VELOCITY :=8.0
 
 @onready var camera_controller: Node3D = %Camera_pivot
-@onready var character_mesh: Node3D = $"Mendri retravaillé 5"
+@onready var character: character_mesh = $"Mendri retravaillé 5"
 @onready var camera: Camera3D = %Camera3D
 
 var camera_input_direction:=Vector2.ZERO
@@ -20,6 +20,12 @@ var Isdashing:=false
 var CanDash:=true
 var dashspeed:=15.0
 
+#####Weapons on hand
+
+@onready var Fists: weapon = $Node/Fists
+@onready var Avelyn: weapon = $Node/Avelyn
+func _ready() -> void:
+	print (Avelyn)
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_pressed("left click"):
@@ -61,7 +67,7 @@ func _physics_process(delta: float) -> void:
 	move_direction=move_direction.normalized()
 	
 	if Isdashing:
-		var dashdirection=character_mesh.transform.basis.z.normalized()
+		var dashdirection=character.transform.basis.z.normalized()
 		velocity=dashdirection*dashspeed
 		velocity.y=0
 	else:
@@ -76,7 +82,7 @@ func _physics_process(delta: float) -> void:
 	if move_direction.length() > 0.2 and !Isdashing:
 		last_movement_direction=move_direction
 	var target_angle:=Vector3.BACK.signed_angle_to(last_movement_direction,Vector3.UP)
-	character_mesh.global_rotation.y=lerp_angle(character_mesh.rotation.y,target_angle,rotation_speed*delta)
+	character.global_rotation.y=lerp_angle(character.rotation.y,target_angle,rotation_speed*delta)
 	
 	moves_logics(velocity)
 	move_and_slide()
@@ -89,16 +95,16 @@ func moves_logics(vel:Vector3):
 	if is_on_floor():
 		if ground_speed>=.2:
 			if !Isdashing:
-				character_mesh.running()
+				character.set_to_motion(Avelyn,"Runs")
 			else :
-				character_mesh.dashing()
+				character.set_to_jump_falls_dash("Dashes")
 		else :
-			character_mesh.idle()
+			character.set_to_motion(Avelyn,"Idle")
 	else :
 		if Isdashing:
-			character_mesh.dashing()
-		elif vel.y>0 : character_mesh.jumping()
-		else : character_mesh.falling()
+			character.set_to_jump_falls_dash("Dashes")
+		elif vel.y>0 : character.set_to_jump_falls_dash("Jump start")
+		else : character.set_to_jump_falls_dash("Falling Idle")
 		
 func dashlogic(dashduration:float,dashcooldown:float):
 	Isdashing=true
