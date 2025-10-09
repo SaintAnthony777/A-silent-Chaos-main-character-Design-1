@@ -9,33 +9,58 @@ extends CharacterBody3D
 @onready var character: character_mesh = $"Mendri retravaillé 5"
 @onready var camera: Camera3D = %Camera3D
 
+#####Weapons on hand
+@onready var Fists: weapon = $"Weapons equipped/Fists"
+@onready var Avelyn: weapon = $"Weapons equipped/Avelyn"
+
+
+
 var camera_input_direction:=Vector2.ZERO
 var last_movement_direction:=Vector3.BACK
 var rotation_speed:=6.0
 var gravity:=-19.0
 var jump_impulse:=8.0
 var start_jumping:=false
+
 ###Dash variables
 var Isdashing:=false
 var CanDash:=true
 var dashspeed:=15.0
 
-#####Weapons on hand
+### variables pour les armes equippées
+var current_equipped_weapon:weapon
+var can_switch_weapon:=true
 
-@onready var Fists: weapon = $Node/Fists
-@onready var Avelyn: weapon = $Node/Avelyn
+##variables pour les attaques
+var is_attacking:bool=false
+var can_attack:=true
+var attack_lunge:=4.0
+var combo_pattern:=0
+var current_attack:="First Strike"
+var attack_duration:=.8
+var attack_cooldown:=.1
+
 func _ready() -> void:
-	print (Avelyn)
+	current_equipped_weapon=Fists
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_pressed("left click"):
 		Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
 	if Input.is_action_pressed("Pause"):
 		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
-	if Input.is_action_just_pressed("left click"):
-		pass
+	if Input.is_action_just_pressed("left click") and can_attack:
+		if combo_pattern!=3: attack_duration=.8
+		else : attack_duration = 1.0
+		print ("cooldown: ",attack_cooldown)
+		print("duration: ",attack_duration)
+		attack_logic(attack_duration,attack_cooldown)
 	if Input.is_action_just_pressed("dashes") and CanDash:
 		dashlogic(.7,.5)
+	if Input.is_action_just_pressed("Fists Switch") and current_equipped_weapon!=Fists and can_switch_weapon:
+		weapon_Switch_to(Fists)
+	if Input.is_action_just_pressed("Avelyn Switch") and current_equipped_weapon!=Avelyn and can_switch_weapon:
+		weapon_Switch_to(Avelyn)
+		
 func _unhandled_input(event: InputEvent) -> void:
 	var camera_is_in_motion:=(
 		event is InputEventMouseMotion and 
@@ -45,6 +70,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		camera_input_direction=event.screen_relative*mouse_sensitivity
 
 func _physics_process(delta: float) -> void:
+	
 	camera_controller.rotation.x+=camera_input_direction.y*delta
 	camera_controller.rotation.x=clamp(camera_controller.rotation.x, -PI/6.0 , PI/3.0)
 	camera_controller.rotation.y-=camera_input_direction.x*delta
@@ -70,6 +96,10 @@ func _physics_process(delta: float) -> void:
 		var dashdirection=character.transform.basis.z.normalized()
 		velocity=dashdirection*dashspeed
 		velocity.y=0
+	if is_attacking:
+		var attackdirection=character.transform.basis.z.normalized()
+		velocity=attackdirection*2
+		velocity.y=0
 	else:
 		if direction :
 			velocity.x = direction.x * SPEED
@@ -88,18 +118,22 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 
-func attacking():
-	pass
+
+func weapon_Switch_to(weapon_to_switch:weapon):
+	current_equipped_weapon=weapon_to_switch
+	
 func moves_logics(vel:Vector3):
 	var ground_speed=vel.length()
 	if is_on_floor():
 		if ground_speed>=.2:
-			if !Isdashing:
-				character.set_to_motion(Avelyn,"Runs")
-			else :
+			if !Isdashing or !is_attacking:
+				character.set_to_motion(current_equipped_weapon,"Runs")
+			if Isdashing:
 				character.set_to_jump_falls_dash("Dashes")
+			if is_attacking:
+				character.set_to_attack(current_equipped_weapon,current_attack)
 		else :
-			character.set_to_motion(Avelyn,"Idle")
+			character.set_to_motion(current_equipped_weapon,"Idle")
 	else :
 		if Isdashing:
 			character.set_to_jump_falls_dash("Dashes")
@@ -113,3 +147,22 @@ func dashlogic(dashduration:float,dashcooldown:float):
 	Isdashing=false
 	await get_tree().create_timer(dashcooldown).timeout
 	CanDash=true
+	
+func attack_logic(atk_durat:float,atk_cool:float):
+	combo_pattern+=1
+	if combo_pattern>3:combo_pattern=1
+	if combo_pattern==1:
+		current_attack="First Strike"
+	if combo_pattern==2:
+		current_attack="Second Strike"
+	if combo_pattern==3:
+		current_attack="Third Strike"
+	print("attaque avec "+current_equipped_weapon.get_weapon_name()+" et effectue "+current_attack)
+	is_attacking=true
+	can_attack=false
+	can_switch_weapon=false
+	await get_tree().create_timer(atk_durat).timeout
+	is_attacking=false
+	await get_tree().create_timer(atk_cool).timeout
+	can_attack=true
+	can_switch_weapon=true

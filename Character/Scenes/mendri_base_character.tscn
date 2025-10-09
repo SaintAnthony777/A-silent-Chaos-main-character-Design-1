@@ -31,14 +31,14 @@ unique_name_in_owner = true
 
 [node name="Mendri retravaillé 5" parent="." instance=ExtResource("2_7o5ti")]
 
-[node name="Node" type="Node" parent="."]
+[node name="Weapons equipped" type="Node" parent="."]
 
-[node name="Avelyn" type="Node" parent="Node"]
+[node name="Avelyn" type="Node" parent="Weapons equipped"]
 script = ExtResource("3_obb3y")
 w_name = "Avelyn"
 metadata/_custom_type_script = "uid://d1473p514iqas"
 
-[node name="Fists" type="Node" parent="Node"]
+[node name="Fists" type="Node" parent="Weapons equipped"]
 script = ExtResource("3_obb3y")
 w_name = "Fist"
 metadata/_custom_type_script = "uid://d1473p514iqas"
