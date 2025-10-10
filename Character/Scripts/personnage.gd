@@ -34,11 +34,12 @@ var can_switch_weapon:=true
 ##variables pour les attaques
 var is_attacking:bool=false
 var can_attack:=true
-var attack_lunge:=4.0
+var attack_lunge:=9.0
 var combo_pattern:=0
 var current_attack:="First Strike"
 var attack_duration:=.8
 var attack_cooldown:=.1
+var attack_list=["Dash Strike","First Strike","Second Strike","Third Strike"]
 
 func _ready() -> void:
 	current_equipped_weapon=Fists
@@ -49,12 +50,12 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_pressed("Pause"):
 		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 	if Input.is_action_just_pressed("left click") and can_attack:
-		if combo_pattern!=3: attack_duration=.8
+		if combo_pattern!=3: attack_duration=.7
 		else : attack_duration = 1.0
 		print ("cooldown: ",attack_cooldown)
 		print("duration: ",attack_duration)
 		attack_logic(attack_duration,attack_cooldown)
-	if Input.is_action_just_pressed("dashes") and CanDash:
+	if Input.is_action_just_pressed("dashes") and CanDash and !is_attacking:
 		dashlogic(.7,.5)
 	if Input.is_action_just_pressed("Fists Switch") and current_equipped_weapon!=Fists and can_switch_weapon:
 		weapon_Switch_to(Fists)
@@ -96,20 +97,20 @@ func _physics_process(delta: float) -> void:
 		var dashdirection=character.transform.basis.z.normalized()
 		velocity=dashdirection*dashspeed
 		velocity.y=0
-	if is_attacking:
-		var attackdirection=character.transform.basis.z.normalized()
-		velocity=attackdirection*2
-		velocity.y=0
 	else:
-		if direction :
-			velocity.x = direction.x * SPEED
-			velocity.z = direction.z * SPEED
-		else:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-			velocity.z = move_toward(velocity.z, 0, SPEED)
+		if character.lunge:
+			var attack_direction=character.transform.basis.z.normalized()
+			velocity=attack_direction*15
+		else :
+			if direction :
+				velocity.x = direction.x * SPEED
+				velocity.z = direction.z * SPEED
+			else:
+				velocity.x = move_toward(velocity.x, 0, SPEED)
+				velocity.z = move_toward(velocity.z, 0, SPEED)
 	
 	###rotation du personnage
-	if move_direction.length() > 0.2 and !Isdashing:
+	if move_direction.length() > 0.2 and !Isdashing and !is_attacking:
 		last_movement_direction=move_direction
 	var target_angle:=Vector3.BACK.signed_angle_to(last_movement_direction,Vector3.UP)
 	character.global_rotation.y=lerp_angle(character.rotation.y,target_angle,rotation_speed*delta)
@@ -133,7 +134,10 @@ func moves_logics(vel:Vector3):
 			if is_attacking:
 				character.set_to_attack(current_equipped_weapon,current_attack)
 		else :
-			character.set_to_motion(current_equipped_weapon,"Idle")
+			if !is_attacking:
+				character.set_to_motion(current_equipped_weapon,"Idle")
+			else :
+				character.set_to_attack(current_equipped_weapon,current_attack)
 	else :
 		if Isdashing:
 			character.set_to_jump_falls_dash("Dashes")
@@ -151,13 +155,8 @@ func dashlogic(dashduration:float,dashcooldown:float):
 func attack_logic(atk_durat:float,atk_cool:float):
 	combo_pattern+=1
 	if combo_pattern>3:combo_pattern=1
-	if combo_pattern==1:
-		current_attack="First Strike"
-	if combo_pattern==2:
-		current_attack="Second Strike"
-	if combo_pattern==3:
-		current_attack="Third Strike"
-	print("attaque avec "+current_equipped_weapon.get_weapon_name()+" et effectue "+current_attack)
+	if Isdashing:combo_pattern=0
+	current_attack=attack_list[combo_pattern]
 	is_attacking=true
 	can_attack=false
 	can_switch_weapon=false
