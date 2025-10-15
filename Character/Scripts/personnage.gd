@@ -6,7 +6,7 @@ extends CharacterBody3D
 @export var JUMP_VELOCITY :=8.0
 
 @onready var camera_controller: Node3D = %Camera_pivot
-@onready var character: character_mesh = $"Mendri retravaillé 5"
+@onready var character: character_mesh = $"Mendri retravaillé 7"
 @onready var camera: Camera3D = %Camera3D
 
 #####Weapons on hand
@@ -14,7 +14,7 @@ extends CharacterBody3D
 @onready var Avelyn: weapon = $"Weapons equipped/Avelyn"
 
 
-
+###Camera Vars
 var camera_input_direction:=Vector2.ZERO
 var last_movement_direction:=Vector3.BACK
 var rotation_speed:=6.0
@@ -37,9 +37,6 @@ var can_attack:=true
 var attack_lunge:=9.0
 var combo_pattern:=0
 var current_attack:="First Strike"
-var attack_duration:=.8
-var attack_cooldown:=.1
-var attack_list=["Dash Strike","First Strike","Second Strike","Third Strike"]
 
 func _ready() -> void:
 	current_equipped_weapon=Fists
@@ -50,11 +47,11 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_pressed("Pause"):
 		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 	if Input.is_action_just_pressed("left click") and can_attack:
-		if combo_pattern!=3: attack_duration=.7
-		else : attack_duration = 1.0
-		print ("cooldown: ",attack_cooldown)
-		print("duration: ",attack_duration)
-		attack_logic(attack_duration,attack_cooldown)
+		attack_logic(
+			current_equipped_weapon.attack_list,
+			current_equipped_weapon.attack_duration,
+			0.1
+			)
 	if Input.is_action_just_pressed("dashes") and CanDash and !is_attacking:
 		dashlogic(.7,.5)
 	if Input.is_action_just_pressed("Fists Switch") and current_equipped_weapon!=Fists and can_switch_weapon:
@@ -97,11 +94,11 @@ func _physics_process(delta: float) -> void:
 		var dashdirection=character.transform.basis.z.normalized()
 		velocity=dashdirection*dashspeed
 		velocity.y=0
+	elif character.lunge:
+		var attack_direction=character.transform.basis.z.normalized()
+		velocity=attack_direction*9
 	else:
-		if character.lunge:
-			var attack_direction=character.transform.basis.z.normalized()
-			velocity=attack_direction*15
-		else :
+		if !is_attacking:
 			if direction :
 				velocity.x = direction.x * SPEED
 				velocity.z = direction.z * SPEED
@@ -110,7 +107,7 @@ func _physics_process(delta: float) -> void:
 				velocity.z = move_toward(velocity.z, 0, SPEED)
 	
 	###rotation du personnage
-	if move_direction.length() > 0.2 and !Isdashing and !is_attacking:
+	if move_direction.length() > 0.2 and !Isdashing and !character.lunge:
 		last_movement_direction=move_direction
 	var target_angle:=Vector3.BACK.signed_angle_to(last_movement_direction,Vector3.UP)
 	character.global_rotation.y=lerp_angle(character.rotation.y,target_angle,rotation_speed*delta)
@@ -152,15 +149,15 @@ func dashlogic(dashduration:float,dashcooldown:float):
 	await get_tree().create_timer(dashcooldown).timeout
 	CanDash=true
 	
-func attack_logic(atk_durat:float,atk_cool:float):
+func attack_logic(attack_list:Array[String],attack_duration:Array[float],atk_cool:float):
 	combo_pattern+=1
-	if combo_pattern>3:combo_pattern=1
-	if Isdashing:combo_pattern=0
+	if combo_pattern>attack_list.size()-1:combo_pattern=1
+	if Isdashing : combo_pattern=0
 	current_attack=attack_list[combo_pattern]
 	is_attacking=true
 	can_attack=false
 	can_switch_weapon=false
-	await get_tree().create_timer(atk_durat).timeout
+	await get_tree().create_timer(attack_duration[combo_pattern]).timeout
 	is_attacking=false
 	await get_tree().create_timer(atk_cool).timeout
 	can_attack=true

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bpehh4ldxvsx7"]
 
 [ext_resource type="Script" uid="uid://56u7gn7jeym0" path="res://Character/Scripts/personnage.gd" id="1_7o5ti"]
-[ext_resource type="PackedScene" uid="uid://b2slcngyib7q2" path="res://Character/Scenes/mendri_retravaillé_6.tscn" id="2_7o5ti"]
+[ext_resource type="PackedScene" uid="uid://ejkl417h0tnc" path="res://Character/Scenes/mendri_retravaillé_7.tscn" id="2_obb3y"]
 [ext_resource type="Script" uid="uid://d1473p514iqas" path="res://Character/custom scripts/weapon_class.gd" id="3_obb3y"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ukt3s"]
@@ -19,7 +19,7 @@ shape = SubResource("CapsuleShape3D_ukt3s")
 
 [node name="Camera_pivot" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.938746, -0.34461, 0, 0.34461, 0.938746, 0, 1.54788, 0)
+transform = Transform3D(1, 0, 0, 0, 0.938746, -0.34461, 0, 0.34461, 0.938746, 0, 1.548, 0)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Camera_pivot"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.00771475, -0.00365937, -0.00996846)
@@ -29,16 +29,20 @@ spring_length = 3.0
 [node name="Camera3D" type="Camera3D" parent="Camera_pivot/SpringArm3D"]
 unique_name_in_owner = true
 
-[node name="Mendri retravaillé 5" parent="." instance=ExtResource("2_7o5ti")]
+[node name="Mendri retravaillé 7" parent="." instance=ExtResource("2_obb3y")]
 
 [node name="Weapons equipped" type="Node" parent="."]
 
 [node name="Avelyn" type="Node" parent="Weapons equipped"]
 script = ExtResource("3_obb3y")
 w_name = "Avelyn"
+att_list = Array[String](["Dash Strike", "First Strike", "Second Strike", "Third Strike"])
+att_dur = Array[float]([0.1, 1.0, 0.833, 1.133])
 metadata/_custom_type_script = "uid://d1473p514iqas"
 
 [node name="Fists" type="Node" parent="Weapons equipped"]
 script = ExtResource("3_obb3y")
 w_name = "Fist"
+att_list = Array[String](["", "First Strike", "Second Strike", "Third Strike"])
+att_dur = Array[float]([0.0, 0.333, 0.567, 1.333])
 metadata/_custom_type_script = "uid://d1473p514iqas"
