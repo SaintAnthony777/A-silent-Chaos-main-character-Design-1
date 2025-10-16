@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://csv1e278n8aim"]
+[gd_scene load_steps=18 format=3 uid="uid://csv1e278n8aim"]
 
 [ext_resource type="Texture2D" uid="uid://cocevivlgfgt7" path="res://Skies/NightSkyHDRI003_2K-TONEMAPPED.jpg" id="1_ec2ou"]
 [ext_resource type="PackedScene" uid="uid://bpehh4ldxvsx7" path="res://Character/Scenes/mendri_base_character.tscn" id="1_vvn7d"]
+[ext_resource type="LightmapGIData" uid="uid://bfwggca0d3ycr" path="res://test Baking/ground_test 2 .lmbake" id="3_atg72"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_atg72"]
 panorama = ExtResource("1_ec2ou")
@@ -21,12 +22,19 @@ fog_density = 0.413
 fog_sky_affect = 0.387
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_u3rel"]
+lightmap_size_hint = Vector2i(752, 752)
+add_uv2 = true
 size = Vector2(150, 150)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1vbym"]
+albedo_color = Color(0.28729492, 0.28729492, 0.2872949, 1)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_niaf5"]
 data = PackedVector3Array(75, 0, 75, -75, 0, 75, 75, 0, -75, -75, 0, 75, -75, 0, -75, 75, 0, -75)
 
 [sub_resource type="BoxMesh" id="BoxMesh_niaf5"]
+lightmap_size_hint = Vector2i(14, 54)
+add_uv2 = true
 size = Vector3(1, 4.35, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ec2ou"]
@@ -56,7 +64,24 @@ stencil_reference = 4
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_jvrff"]
+lightmap_size_hint = Vector2i(14, 42)
+add_uv2 = true
 size = Vector3(1, 3.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y2s67"]
+emission_enabled = true
+emission = Color(0.16324398, 0.42664105, 0.18127981, 1)
+emission_energy_multiplier = 5.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_785ic"]
+emission_enabled = true
+emission = Color(0.21433464, 0.35615966, 0.7579641, 1)
+emission_energy_multiplier = 7.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4o7q1"]
+emission_enabled = true
+emission = Color(0.8888685, 0.4790737, 3.85046e-07, 1)
+emission_energy_multiplier = 10.5
 
 [node name="Ground test" type="Node3D"]
 
@@ -71,6 +96,7 @@ shadow_enabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_u3rel")
+surface_material_override/0 = SubResource("StandardMaterial3D_1vbym")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
 
@@ -90,6 +116,7 @@ shape = SubResource("ConcavePolygonShape3D_s616b")
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.029520035, 0.50000006, -2.6877866)
 mesh = SubResource("BoxMesh_jvrff")
+surface_material_override/0 = SubResource("StandardMaterial3D_y2s67")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D3"]
 
@@ -99,6 +126,7 @@ shape = SubResource("ConcavePolygonShape3D_s616b")
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2627692, 0.50000006, 4.6393914)
 mesh = SubResource("BoxMesh_jvrff")
+surface_material_override/0 = SubResource("StandardMaterial3D_785ic")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D4"]
 
@@ -108,6 +136,7 @@ shape = SubResource("ConcavePolygonShape3D_s616b")
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3549838, 0.50000006, 4.751554)
 mesh = SubResource("BoxMesh_jvrff")
+surface_material_override/0 = SubResource("StandardMaterial3D_4o7q1")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D5"]
 
@@ -115,3 +144,8 @@ mesh = SubResource("BoxMesh_jvrff")
 shape = SubResource("ConcavePolygonShape3D_s616b")
 
 [node name="Mendri base character" parent="." instance=ExtResource("1_vvn7d")]
+
+[node name="LightmapGI" type="LightmapGI" parent="."]
+supersampling = true
+supersampling_factor = 1.0
+light_data = ExtResource("3_atg72")

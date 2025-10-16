@@ -30,6 +30,8 @@ var dashspeed:=15.0
 ### variables pour les armes equippées
 var current_equipped_weapon:weapon
 var can_switch_weapon:=true
+var is_switching_weapon:=false
+var weapon_to_switch:weapon
 
 ##variables pour les attaques
 var is_attacking:bool=false
@@ -37,6 +39,8 @@ var can_attack:=true
 var attack_lunge:=9.0
 var combo_pattern:=0
 var current_attack:="First Strike"
+
+
 
 func _ready() -> void:
 	current_equipped_weapon=Fists
@@ -117,24 +121,32 @@ func _physics_process(delta: float) -> void:
 	
 
 
-func weapon_Switch_to(weapon_to_switch:weapon):
-	current_equipped_weapon=weapon_to_switch
-	
+func weapon_Switch_to(WP:weapon):
+	is_switching_weapon=true
+	can_switch_weapon=false
+	weapon_to_switch=WP
+	await get_tree().create_timer(.5).timeout
+	current_equipped_weapon=WP
+	can_switch_weapon=true
+	is_switching_weapon=false
 func moves_logics(vel:Vector3):
 	var ground_speed=vel.length()
 	if is_on_floor():
-		if ground_speed>=.2:
-			if !Isdashing or !is_attacking:
-				character.set_to_motion(current_equipped_weapon,"Runs")
-			if Isdashing:
-				character.set_to_jump_falls_dash("Dashes")
-			if is_attacking:
-				character.set_to_attack(current_equipped_weapon,current_attack)
-		else :
-			if !is_attacking:
-				character.set_to_motion(current_equipped_weapon,"Idle")
+		if !is_switching_weapon:
+			if ground_speed>=.2:
+				if !Isdashing or !is_attacking:
+					character.set_to_motion(current_equipped_weapon,"Runs")
+				if Isdashing:
+					character.set_to_jump_falls_dash("Dashes")
+				if is_attacking:
+					character.set_to_attack(current_equipped_weapon,current_attack)
 			else :
-				character.set_to_attack(current_equipped_weapon,current_attack)
+				if !is_attacking:
+					character.set_to_motion(current_equipped_weapon,"Idle")
+				else :
+					character.set_to_attack(current_equipped_weapon,current_attack)
+		else :
+			character.weapon_switch(weapon_to_switch)
 	else :
 		if Isdashing:
 			character.set_to_jump_falls_dash("Dashes")
