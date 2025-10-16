@@ -1,11 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://csv1e278n8aim"]
+[gd_scene load_steps=13 format=3 uid="uid://csv1e278n8aim"]
 
+[ext_resource type="Texture2D" uid="uid://cocevivlgfgt7" path="res://Skies/NightSkyHDRI003_2K-TONEMAPPED.jpg" id="1_ec2ou"]
 [ext_resource type="PackedScene" uid="uid://bpehh4ldxvsx7" path="res://Character/Scenes/mendri_base_character.tscn" id="1_vvn7d"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_niaf5"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_atg72"]
+panorama = ExtResource("1_ec2ou")
 
 [sub_resource type="Sky" id="Sky_ec2ou"]
-sky_material = SubResource("ProceduralSkyMaterial_niaf5")
+sky_material = SubResource("PanoramaSkyMaterial_atg72")
 
 [sub_resource type="Environment" id="Environment_atg72"]
 background_mode = 2
@@ -62,9 +64,8 @@ size = Vector3(1, 3.12, 1)
 environment = SubResource("Environment_atg72")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.41739592, -0.72054756, 0.5537074, 0.6941592, 0.64604634, 0.31743845, -0.5864503, 0.25186375, 0.76983184, 0, 0, 0)
-light_color = Color(0.7967055, 0.37314343, 0.19656008, 1)
-light_energy = 3.222
+transform = Transform3D(0.5973606, -0.76307726, 0.2467254, 0.4896772, 0.5906937, 0.6413248, -0.6351195, -0.2622863, 0.7265183, 0, 0, 0)
+light_color = Color(0.51968974, 0.57922685, 0.87220883, 1)
 light_specular = 5.5
 shadow_enabled = true
 

@@ -1,0 +1,45 @@
+[gd_resource type="VisualShader" load_steps=4 format=3 uid="uid://c3lgxyhk6r2x"]
+
+[ext_resource type="Texture2D" uid="uid://cbvmtlt4o23h3" path="res://VFXES/Weapon Switch/misc textures/rune_solo.jpg" id="1_rrjws"]
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_r2hcx"]
+expanded_output_ports = [0]
+texture = ExtResource("1_rrjws")
+texture_type = 1
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_wt4ae"]
+parameter_name = "Rune_Color"
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, depth_test_default, cull_disabled, diffuse_lambert, specular_schlick_ggx;
+
+uniform vec4 Rune_Color : source_color;
+uniform sampler2D tex_frg_2 : source_color;
+
+
+
+void fragment() {
+// ColorParameter:3
+	vec4 n_out3p0 = Rune_Color;
+
+
+// Texture2D:2
+	vec4 n_out2p0 = texture(tex_frg_2, UV);
+
+
+// Output:0
+	ALBEDO = vec3(n_out3p0.xyz);
+	ALPHA = n_out2p0.x;
+	EMISSION = vec3(n_out2p0.xyz);
+
+
+}
+"
+modes/cull = 2
+nodes/fragment/0/position = Vector2(400, 180)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture_r2hcx")
+nodes/fragment/2/position = Vector2(-100, 400)
+nodes/fragment/3/node = SubResource("VisualShaderNodeColorParameter_wt4ae")
+nodes/fragment/3/position = Vector2(-20, 180)
+nodes/fragment/connections = PackedInt32Array(2, 0, 0, 1, 2, 0, 0, 5, 3, 0, 0, 0)

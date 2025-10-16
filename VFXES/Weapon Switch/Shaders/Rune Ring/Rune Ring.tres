@@ -1,0 +1,74 @@
+[gd_resource type="VisualShader" load_steps=7 format=3 uid="uid://lmq6vn07g5iv"]
+
+[ext_resource type="Texture2D" uid="uid://dewksyfg87lo0" path="res://VFXES/Weapon Switch/misc textures/runes.jpg" id="1_ew0ld"]
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_43oe6"]
+texture = ExtResource("1_ew0ld")
+texture_type = 1
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_fgvno"]
+parameter_name = "Main_Color"
+
+[sub_resource type="VisualShaderNodeUVFunc" id="VisualShaderNodeUVFunc_ew0ld"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_43oe6"]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_fgvno"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0.2)]
+op_type = 0
+operator = 2
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, depth_test_default, cull_disabled, diffuse_toon, specular_toon;
+
+uniform vec4 Main_Color : source_color;
+uniform sampler2D tex_frg_2 : source_color;
+
+
+
+void fragment() {
+// ColorParameter:3
+	vec4 n_out3p0 = Main_Color;
+
+
+// Input:5
+	float n_out5p0 = TIME;
+
+
+// VectorOp:6
+	vec2 n_in6p1 = vec2(0.00000, 0.20000);
+	vec2 n_out6p0 = vec2(n_out5p0) * n_in6p1;
+
+
+// UVFunc:4
+	vec2 n_in4p1 = vec2(1.00000, 1.00000);
+	vec2 n_out4p0 = n_out6p0 * n_in4p1 + UV;
+
+
+// Texture2D:2
+	vec4 n_out2p0 = texture(tex_frg_2, n_out4p0);
+
+
+// Output:0
+	ALBEDO = vec3(n_out3p0.xyz);
+	ALPHA = n_out2p0.x;
+
+
+}
+"
+modes/cull = 2
+modes/diffuse = 3
+modes/specular = 1
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture_43oe6")
+nodes/fragment/2/position = Vector2(120, 260)
+nodes/fragment/3/node = SubResource("VisualShaderNodeColorParameter_fgvno")
+nodes/fragment/3/position = Vector2(100, 80)
+nodes/fragment/4/node = SubResource("VisualShaderNodeUVFunc_ew0ld")
+nodes/fragment/4/position = Vector2(-180, 280)
+nodes/fragment/5/node = SubResource("VisualShaderNodeInput_43oe6")
+nodes/fragment/5/position = Vector2(-660, 340)
+nodes/fragment/6/node = SubResource("VisualShaderNodeVectorOp_fgvno")
+nodes/fragment/6/position = Vector2(-400, 440)
+nodes/fragment/connections = PackedInt32Array(2, 0, 0, 1, 3, 0, 0, 0, 4, 0, 2, 0, 6, 0, 4, 2, 5, 0, 6, 0)

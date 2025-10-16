@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://boyingigfseml"]
+
+[ext_resource type="PackedScene" uid="uid://dr6lo53u0os6d" path="res://VFXES/Weapon Switch/rune ring Model/rune Ring.glb" id="1_63jl6"]
+
+[node name="rune Ring" instance=ExtResource("1_63jl6")]
