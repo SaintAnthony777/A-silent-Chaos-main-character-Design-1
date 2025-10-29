@@ -51,6 +51,7 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_pressed("Pause"):
 		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 	if Input.is_action_just_pressed("left click") and can_attack:
+		stop_motion()
 		attack_logic(
 			current_equipped_weapon.attack_list,
 			current_equipped_weapon.attack_duration,
@@ -59,8 +60,10 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("dashes") and CanDash and !is_attacking:
 		dashlogic(.7,.5)
 	if Input.is_action_just_pressed("Fists Switch") and current_equipped_weapon!=Fists and can_switch_weapon:
+		stop_motion()
 		weapon_Switch_to(Fists)
 	if Input.is_action_just_pressed("Avelyn Switch") and current_equipped_weapon!=Avelyn and can_switch_weapon:
+		stop_motion()
 		weapon_Switch_to(Avelyn)
 		
 func _unhandled_input(event: InputEvent) -> void:
@@ -102,7 +105,7 @@ func _physics_process(delta: float) -> void:
 		var attack_direction=character.transform.basis.z.normalized()
 		velocity=attack_direction*9
 	else:
-		if !is_attacking:
+		if !is_attacking and !is_switching_weapon:
 			if direction :
 				velocity.x = direction.x * SPEED
 				velocity.z = direction.z * SPEED
@@ -129,6 +132,7 @@ func weapon_Switch_to(WP:weapon):
 	current_equipped_weapon=WP
 	can_switch_weapon=true
 	is_switching_weapon=false
+	
 func moves_logics(vel:Vector3):
 	var ground_speed=vel.length()
 	if is_on_floor():
@@ -174,3 +178,7 @@ func attack_logic(attack_list:Array[String],attack_duration:Array[float],atk_coo
 	await get_tree().create_timer(atk_cool).timeout
 	can_attack=true
 	can_switch_weapon=true
+
+func stop_motion():
+	velocity.x=0
+	velocity.z=0

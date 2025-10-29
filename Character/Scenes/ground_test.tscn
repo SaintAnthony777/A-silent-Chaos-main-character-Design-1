@@ -1,25 +1,31 @@
-[gd_scene load_steps=18 format=3 uid="uid://csv1e278n8aim"]
+[gd_scene load_steps=17 format=3 uid="uid://csv1e278n8aim"]
 
-[ext_resource type="Texture2D" uid="uid://cocevivlgfgt7" path="res://Skies/NightSkyHDRI003_2K-TONEMAPPED.jpg" id="1_ec2ou"]
+[ext_resource type="Texture2D" uid="uid://bch24mwo66lwr" path="res://Skies/qwantani_dusk_2_puresky_2k.exr" id="1_ec2ou"]
 [ext_resource type="PackedScene" uid="uid://bpehh4ldxvsx7" path="res://Character/Scenes/mendri_base_character.tscn" id="1_vvn7d"]
-[ext_resource type="LightmapGIData" uid="uid://bfwggca0d3ycr" path="res://test Baking/ground_test 2 .lmbake" id="3_atg72"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_atg72"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ec2ou"]
 panorama = ExtResource("1_ec2ou")
 
-[sub_resource type="Sky" id="Sky_ec2ou"]
-sky_material = SubResource("PanoramaSkyMaterial_atg72")
+[sub_resource type="Sky" id="Sky_y2s67"]
+sky_material = SubResource("PanoramaSkyMaterial_ec2ou")
 
 [sub_resource type="Environment" id="Environment_atg72"]
 background_mode = 2
-sky = SubResource("Sky_ec2ou")
+sky = SubResource("Sky_y2s67")
 ambient_light_source = 3
+reflected_light_source = 2
 tonemap_mode = 2
+tonemap_exposure = 0.1
 glow_enabled = true
+glow_intensity = 2.12
 glow_bloom = 0.16
+fog_enabled = true
 fog_mode = 1
-fog_density = 0.413
-fog_sky_affect = 0.387
+fog_light_color = Color(0.45632768, 0.37592933, 0.3602111, 1)
+fog_light_energy = 4.94
+fog_sun_scatter = 0.7
+fog_density = 1.0
+fog_sky_affect = 0.945
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_u3rel"]
 lightmap_size_hint = Vector2i(752, 752)
@@ -89,8 +95,9 @@ emission_energy_multiplier = 10.5
 environment = SubResource("Environment_atg72")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.5973606, -0.76307726, 0.2467254, 0.4896772, 0.5906937, 0.6413248, -0.6351195, -0.2622863, 0.7265183, 0, 0, 0)
-light_color = Color(0.51968974, 0.57922685, 0.87220883, 1)
+transform = Transform3D(0.8481347, -0.32997844, -0.41446596, 0.49835402, 0.762374, 0.41283092, 0.17975275, -0.5566869, 0.8110418, 0, 0, 0)
+light_color = Color(0.7713331, 0.40980974, 0.19272134, 1)
+light_energy = 7.889
 light_specular = 5.5
 shadow_enabled = true
 
@@ -144,8 +151,3 @@ surface_material_override/0 = SubResource("StandardMaterial3D_4o7q1")
 shape = SubResource("ConcavePolygonShape3D_s616b")
 
 [node name="Mendri base character" parent="." instance=ExtResource("1_vvn7d")]
-
-[node name="LightmapGI" type="LightmapGI" parent="."]
-supersampling = true
-supersampling_factor = 1.0
-light_data = ExtResource("3_atg72")
