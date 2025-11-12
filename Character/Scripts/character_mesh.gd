@@ -1,6 +1,8 @@
 extends Node3D
+
 class_name character_mesh
 var lunge:=false
+
 func set_to_motion(current_weapon:weapon,current_action:String):
 	$AnimationTree.set("parameters/Final Output/transition_request","Moves")
 	$AnimationTree.set("parameters/moves Weapon equipped  /transition_request",current_weapon.get_weapon_name())

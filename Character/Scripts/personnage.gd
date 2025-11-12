@@ -6,7 +6,7 @@ extends CharacterBody3D
 @export var JUMP_VELOCITY :=8.0
 
 @onready var camera_controller: Node3D = %Camera_pivot
-@onready var character: character_mesh = $"Mendri retravaillé 7"
+@onready var character: character_mesh =$"Mendri Mesh"
 @onready var camera: Camera3D = %Camera3D
 
 #####Weapons on hand

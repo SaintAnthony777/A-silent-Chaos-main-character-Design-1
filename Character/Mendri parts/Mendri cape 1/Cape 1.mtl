@@ -1,0 +1,18 @@
+# Blender 4.0.0 MTL File: 'Mendri retravaillé 3.blend'
+# www.blender.org
+
+newmtl Cape_Material
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd /home/anthonyradahy/DATA/Idees de jeux/Game dev tools/Materials/Fabric/denim fabric/textures/denim_fabric_06_diff_1k.jpg
+map_Pr /home/anthonyradahy/DATA/Idees de jeux/Game dev tools/Materials/Fabric/denim fabric/textures/denim_fabric_06_rough_1k.exr
+map_Bump -bm 1.000000 /home/anthonyradahy/DATA/Idees de jeux/Game dev tools/Materials/Fabric/denim fabric/textures/denim_fabric_06_nor_gl_1k.exr
