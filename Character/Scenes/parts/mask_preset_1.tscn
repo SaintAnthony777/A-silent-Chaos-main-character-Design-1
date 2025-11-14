@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdovn67m2pekg"]
+
+[ext_resource type="PackedScene" uid="uid://d0w44qw7kiv7y" path="res://Character/Mendri parts/masks/mask model 1/mask preset 1.glb" id="1_skcaq"]
+[ext_resource type="Texture2D" uid="uid://cn40iwyrfrwle" path="res://Character/Mendri parts/masks/mask model 1/mask preset 1_Motif 1.png" id="2_ua5o7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nm4qx"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.5743278, 0.5743278, 0.5743278, 1)
+metallic = 0.33
+roughness = 0.27
+emission_enabled = true
+emission = Color(0.60346025, 0.55293095, 0, 1)
+emission_energy_multiplier = 10.75
+emission_operator = 1
+emission_texture = ExtResource("2_ua5o7")
+
+[node name="mask preset 1" instance=ExtResource("1_skcaq")]
+
+[node name="Mask Model 1" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, -0.018256605, 0)
+surface_material_override/0 = SubResource("StandardMaterial3D_nm4qx")
