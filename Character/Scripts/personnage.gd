@@ -75,11 +75,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		camera_input_direction=event.screen_relative*mouse_sensitivity
 
 func _physics_process(delta: float) -> void:
-	
 	camera_controller.rotation.x+=camera_input_direction.y*delta
 	camera_controller.rotation.x=clamp(camera_controller.rotation.x, -PI/6.0 , PI/3.0)
 	camera_controller.rotation.y-=camera_input_direction.x*delta
-	
 	camera_input_direction=Vector2.ZERO
 	
 	if not is_on_floor():
@@ -116,9 +114,8 @@ func _physics_process(delta: float) -> void:
 	###rotation du personnage
 	if move_direction.length() > 0.2 and !Isdashing and !character.lunge:
 		last_movement_direction=move_direction
-	var target_angle:=Vector3.BACK.signed_angle_to(last_movement_direction,Vector3.UP)
-	character.global_rotation.y=lerp_angle(character.rotation.y,target_angle,rotation_speed*delta)
-	
+		var target_angle:=Vector3.BACK.signed_angle_to(last_movement_direction,Vector3.UP)
+		character.global_rotation.y=lerp_angle(character.rotation.y,target_angle,rotation_speed*delta)
 	moves_logics(velocity)
 	move_and_slide()
 	
@@ -138,6 +135,7 @@ func moves_logics(vel:Vector3):
 	if is_on_floor():
 		if !is_switching_weapon:
 			if ground_speed>=.2:
+				camera.fov=lerp(camera.fov,95.0,.1)
 				if !Isdashing or !is_attacking:
 					character.set_to_motion(current_equipped_weapon,"Runs")
 				if Isdashing:
@@ -145,6 +143,7 @@ func moves_logics(vel:Vector3):
 				if is_attacking:
 					character.set_to_attack(current_equipped_weapon,current_attack)
 			else :
+				camera.fov=lerp(camera.fov,70.0,.1)
 				if !is_attacking:
 					character.set_to_motion(current_equipped_weapon,"Idle")
 				else :
